@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours : Le Marché de l'Emploi</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #f97316;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-gray: #475569;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            padding-bottom: 80px; /* Espace pour le bouton flottant */
+        }
+
+        /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        header p { font-size: 1.1rem; opacity: 0.9; }
+
+        /* --- Bouton Navigation Activité --- */
+        .nav-activity-btn {
+            background: var(--white);
+            color: var(--primary-dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-activity-btn:hover { transform: scale(1.05); }
+
+        /* --- Layout --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; }
+        section { margin-bottom: 3rem; background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); page-break-inside: avoid; }
+        
+        h2 { color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--bg-light); padding-bottom: 0.5rem; }
+        h3 { color: var(--text-dark); font-size: 1.3rem; margin: 1.5rem 0 0.8rem; }
+        
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; color: var(--text-gray); }
+
+        /* --- Components --- */
+        .market-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media(min-width: 768px) { .market-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .market-card { padding: 1.5rem; border-radius: 8px; height: 100%; break-inside: avoid; }
+        .open-market { background-color: #eff6ff; border-left: 5px solid var(--primary); }
+        .hidden-market { background-color: #fff7ed; border-left: 5px solid var(--secondary); }
+        
+        .tag { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; }
+        .tag-open { background: #dbeafe; color: var(--primary-dark); }
+        .tag-hidden { background: #ffedd5; color: #c2410c; }
+
+        .pros-cons { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+        .box { flex: 1; min-width: 140px; padding: 1rem; border-radius: 6px; font-size: 0.9rem; }
+        .box-pros { background: #f0fdf4; color: #15803d; }
+        .box-cons { background: #fef2f2; color: #b91c1c; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: var(--bg-light); color: var(--primary-dark); }
+
+        .levers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .lever-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; break-inside: avoid; }
+        .lever-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+        .action-box { background: #f8fafc; border-left: 3px solid var(--text-gray); padding: 0.5rem 1rem; margin-top: 1rem; font-style: italic; font-size: 0.9rem; }
+
+        /* --- View Toggle Utility --- */
+        .hidden-view { display: none !important; }
+        .visible-view { display: block !important; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- STYLES SPÉCIFIQUES À L'ACTIVITÉ --- */
+        .activity-sheet {
+            background: white;
+            max-width: 210mm; /* Largeur A4 */
+            margin: 0 auto;
+            padding: 10mm; /* Marges réduites pour tenir sur la page */
+            box-shadow: var(--shadow);
+        }
+
+        .activity-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px; }
+        .activity-header h1 { font-size: 20pt; color: #000; margin-bottom: 0; }
+        .activity-header p { color: #444; font-size: 11pt; margin-top: 5px; }
+
+        .activity-section { margin-bottom: 20px; page-break-inside: avoid; }
+        .activity-section h3 { font-size: 12pt; border-bottom: 1px solid #ccc; padding-bottom: 3px; color: var(--primary-dark); margin-top: 10px; }
+
+        /* Brainstorming checklist - plus compact */
+        .brainstorm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 5px; }
+        .check-item { display: flex; align-items: center; gap: 5px; font-size: 9pt; }
+        .check-item input { width: 14px; height: 14px; }
+
+        /* Les 3 Cercles - Compact */
+        .circles-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .circle-box { border: 1px solid #ccc; padding: 8px; border-radius: 6px; background: #fdfdfd; }
+        .circle-box h4 { font-size: 10pt; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
+        .circle-box p { font-size: 8pt; color: #666; margin-bottom: 5px; font-style: italic; }
+        .circle-area { min-height: 80px; background: #fff; border: 1px dashed #bbb; padding: 5px; font-size: 9pt; }
+        
+        .border-red { border-top: 3px solid #ef4444; }
+        .border-blue { border-top: 3px solid #3b82f6; }
+        .border-green { border-top: 3px solid #22c55e; }
+
+        /* --- MATRICE ÉLARGIE (CRM) --- */
+        .matrix-table { width: 100%; border-collapse: collapse; font-size: 9pt; table-layout: fixed; } /* table-layout: fixed pour gérer la largeur */
+        .matrix-table th { background: #f0f0f0; border: 1px solid #000; padding: 4px; text-align: center; color: #000; font-weight: bold; }
+        .matrix-table td { border: 1px solid #000; padding: 0; height: 30px; }
+        .matrix-input { width: 100%; height: 100%; border: none; padding: 4px; font-family: inherit; font-size: 9pt; outline: none; background: transparent; }
+        
+        /* Largeurs des colonnes pour optimiser l'espace A4 */
+        .col-nom { width: 15%; }
+        .col-fct { width: 15%; }
+        .col-ent { width: 15%; }
+        .col-type { width: 12%; }
+        .col-mail { width: 20%; }
+        .col-tel { width: 13%; }
+        .col-note { width: 10%; }
+
+        /* Script Box */
+        .script-box { background: #fffbeb; border: 1px dashed var(--secondary); padding: 10px; text-align: center; border-radius: 4px; margin-top: 10px;}
+        .script-text { font-weight: bold; font-size: 10pt; color: #333; font-style: italic; }
+
+        /* --- Floating Buttons --- */
+        .floating-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            background-color: var(--secondary); color: white;
+            border: none; border-radius: 50px; padding: 15px 25px;
+            font-size: 1rem; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer; z-index: 1000; display: flex; align-items: center; gap: 10px;
+            transition: transform 0.3s;
+        }
+        .floating-btn:hover { transform: scale(1.05); background-color: #ea580c; }
+        
+        /* --- Footer --- */
+        footer { text-align: center; padding: 2rem; color: var(--text-gray); font-size: 0.9rem; margin-top: 2rem; }
+
+        /* =========================================
+           CSS IMPRESSION (PDF) GLOBAL
+           ========================================= */
+        @media print {
+            @page { size: A4; margin: 10mm; }
+            body { background: white; font-size: 11pt; padding: 0; }
+            
+            /* Cacher les boutons et éléments de navigation */
+            .floating-btn, .nav-activity-btn { display: none !important; }
+            
+            /* Reset des styles visuels pour l'impression */
+            header { padding: 10px 0; background: white; color: black; border-bottom: 2px solid black; margin-bottom: 10px; }
+            header h1 { color: black; font-size: 18pt; margin: 0; }
+            .container { max-width: 100%; padding: 0; width: 100%; margin: 0; }
+            
+            section { box-shadow: none; border: none; padding: 0; margin-bottom: 20px; page-break-inside: avoid; }
+
+            /* Impression spécifique pour le Cours (si demandé) */
+            #view-activity { display: none !important; } /* Par défaut, on cache l'activité */
+            
+            /* IMPORTANT : Si l'utilisateur est sur l'activité, JS ajoutera une classe spécifique pour l'imprimer */
+            body.printing-activity #view-course { display: none !important; }
+            body.printing-activity #view-activity { display: block !important; }
+            body.printing-activity .activity-sheet { display: block !important; box-shadow: none; width: 100%; max-width: 100%; padding: 0; }
+            
+            /* S'assurer que les entrées du formulaire sont visibles/imprimées */
+            input { border: none; background: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Commun -->
+    <header>
+        <h1>🧩 Le Marché de l'Emploi</h1>
+        <p>Comprendre le marché ouvert et le marché caché</p>
+        
+        <!-- Bouton de navigation vers l'activité (Visible uniquement sur le cours) -->
+        <button class="nav-activity-btn" onclick="showActivity()" id="btn-start-activity">
+            <span>✏️</span> Lancer l'activité : Annuaire du Marché Caché
+        </button>
+    </header>
+
+    <!-- ================= VUE 1 : LE COURS ================= -->
+    <main id="view-course" class="container">
+
+        <section>
+            <h2>1. Pourquoi parler de deux marchés ?</h2>
+            <p>Parce que la majorité des recrutements ne passent pas par les annonces. Les candidats pensent souvent que tout se joue sur les sites d’emploi… alors qu’en réalité, ce n’est que la partie visible de l’iceberg.</p>
+            <br>
+            <ul>
+                <li>d’adopter une stratégie de recherche plus efficace ;</li>
+                <li>de diversifier ses actions ;</li>
+                <li>d’augmenter ses chances d’être repéré.</li>
+            </ul>
+        </section>
+
+        <section>
+            <div class="market-grid">
+                <article class="market-card open-market">
+                    <span class="tag tag-open">🌐 Marché Ouvert</span>
+                    <h3>La partie visible</h3>
+                    <p>Offres publiées (sites, réseaux sociaux, agences).</p>
+                    <ul>
+                        <li>Accessible à tous, très concurrentiel.</li>
+                        <li>Processus standardisé.</li>
+                    </ul>
+                    <div class="pros-cons">
+                        <div class="box box-pros">✔️ Facile d'accès</div>
+                        <div class="box box-cons">⚠️ Saturation</div>
+                    </div>
+                </article>
+
+                <article class="market-card hidden-market">
+                    <span class="tag tag-hidden">🕵️♂️ Marché Caché</span>
+                    <h3>La partie immergée</h3>
+                    <p>Opportunités non publiées (réseau, cooptation).</p>
+                    <ul>
+                        <li>60-80% des recrutements.</li>
+                        <li>Moins de concurrence.</li>
+                        <li>Relation directe avec les décideurs.</li>
+                    </ul>
+                    <div class="pros-cons">
+                        <div class="box box-pros">✔️ Sur-mesure</div>
+                        <div class="box box-cons">⚠️ Nécessite de l'action</div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Comparatif synthétique</h2>
+            <table>
+                <thead><tr><th>Critère</th><th>Marché ouvert</th><th>Marché caché</th></tr></thead>
+                <tbody>
+                    <tr><td>Visibilité</td><td>Très visible</td><td>Invisible</td></tr>
+                    <tr><td>Concurrence</td><td>Forte</td><td>Faible</td></tr>
+                    <tr><td>Accès</td><td>Simple</td><td>Proactif</td></tr>
+                </tbody>
+            </table>
+            <div class="key-message" style="background:#eee; color:black; border:1px solid #ccc; padding:1rem; text-align:center; margin-top:1rem; border-radius:8px;">
+                🚀 <strong>Stratégie gagnante :</strong> Combiner les deux marchés.
+            </div>
+        </section>
+
+        <section>
+            <h2>3. Les 6 leviers du marché caché</h2>
+            <div class="levers-grid">
+                <div class="lever-card"><span class="lever-icon">🤝</span><b>Le réseau</b><br>Communiquer autour de soi.</div>
+                <div class="lever-card"><span class="lever-icon">📨</span><b>Spontanées</b><br>Cibler les managers.</div>
+                <div class="lever-card"><span class="lever-icon">🗣️</span><b>Contact direct</b><br>Proposer de l'aide.</div>
+                <div class="lever-card"><span class="lever-icon">👁️</span><b>Visibilité</b><br>LinkedIn & posts.</div>
+                <div class="lever-card"><span class="lever-icon">🎟️</span><b>Événements</b><br>Rencontrer des humains.</div>
+                <div class="lever-card"><span class="lever-icon">🕴️</span><b>Intermédiaires</b><br>Cabinets & intérim.</div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= VUE 2 : L'ACTIVITÉ ================= -->
+    <main id="view-activity" class="hidden-view">
+        
+        <!-- Bouton Retour -->
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <button class="nav-activity-btn" onclick="showCourse()">⬅️ Retour au cours</button>
+        </div>
+
+        <!-- Fiche Activity A4 -->
+        <div class="activity-sheet">
+            
+            <div class="activity-header">
+                <h1>📋 Annuaire : Mon Marché Caché</h1>
+                <p>Outil de recensement des acteurs clés de mon réseau.</p>
+            </div>
+
+            <!-- 1. Brainstorming -->
+            <div class="activity-section">
+                <h3>1. Brainstorming : Qui connaissez-vous ?</h3>
+                <div class="brainstorm-grid">
+                    <div class="check-item"><input type="checkbox"> Famille proche</div>
+                    <div class="check-item"><input type="checkbox"> Amis d'enfance</div>
+                    <div class="check-item"><input type="checkbox"> Voisins</div>
+                    <div class="check-item"><input type="checkbox"> Anciens collègues</div>
+                    <div class="check-item"><input type="checkbox"> Anciens chefs</div>
+                    <div class="check-item"><input type="checkbox"> Clients / Fournisseurs</div>
+                    <div class="check-item"><input type="checkbox"> Formateurs / Professeurs</div>
+                    <div class="check-item"><input type="checkbox"> Membres d'association</div>
+                    <div class="check-item"><input type="checkbox"> Parents d'autres élèves</div>
+                    <div class="check-item"><input type="checkbox"> Contacts LinkedIn</div>
+                </div>
+            </div>
+
+            <!-- 2. Cartographie Rapide -->
+            <div class="activity-section">
+                <h3>2. Typologie (3 contacts clés)</h3>
+                <div class="circles-container">
+                    <div class="circle-box border-red">
+                        <h4>🔴 Proximité</h4>
+                        <div class="circle-area" contenteditable="true"></div>
+                    </div>
+                    <div class="circle-box border-blue">
+                        <h4>🔵 Professionnel</h4>
+                        <div class="circle-area" contenteditable="true"></div>
+                    </div>
+                    <div class="circle-box border-green">
+                        <h4>🟢 Élargi</h4>
+                        <div class="circle-area" contenteditable="true"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Matrice Action CRM (Large) -->
+            <div class="activity-section">
+                <h3>3. Annuaire détaillé du Réseau</h3>
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th class="col-nom">Nom & Prénom</th>
+                            <th class="col-fct">Fonction</th>
+                            <th class="col-ent">Entreprise</th>
+                            <th class="col-type">Type Lien</th>
+                            <th class="col-mail">📧 Email</th>
+                            <th class="col-tel">📱 Téléphone</th>
+                            <th class="col-note">Notes / Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ligne 1 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input" placeholder="Nom"></td>
+                            <td><input type="text" class="matrix-input" placeholder="Poste actuel"></td>
+                            <td><input type="text" class="matrix-input" placeholder="Secteur"></td>
+                            <td><input type="text" class="matrix-input" placeholder="Ex: Ecole"></td>
+                            <td><input type="email" class="matrix-input" placeholder="mail@exemple.com"></td>
+                            <td><input type="tel" class="matrix-input" placeholder="06..."></td>
+                            <td><input type="text" class="matrix-input" placeholder="Action"></td>
+                        </tr>
+                        <!-- Ligne 2 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                        <!-- Ligne 3 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                        <!-- Ligne 4 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                        <!-- Ligne 5 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                         <!-- Ligne 6 -->
+                         <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                        <!-- Ligne 7 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                        <!-- Ligne 8 -->
+                        <tr>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                            <td><input type="email" class="matrix-input"></td>
+                            <td><input type="tel" class="matrix-input"></td>
+                            <td><input type="text" class="matrix-input"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4. Le Script -->
+            <div class="activity-section">
+                <div class="script-box">
+                    <p class="script-text">« Je suis en recherche active dans le domaine X. Si tu entends parler d'un besoin, même informel, je suis preneur. »</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Bouton Flottant Global -->
+    <button class="floating-btn" id="main-action-btn" onclick="handlePrint()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Télécharger en PDF
+    </button>
+
+    <footer>
+        <p>&copy; Cours : Comprendre le marché ouvert et le marché caché de l’emploi.</p>
+    </footer>
+
+    <script>
+        function showActivity() {
+            document.getElementById('view-course').classList.add('hidden-view');
+            document.getElementById('view-course').classList.remove('visible-view');
+            
+            document.getElementById('view-activity').classList.remove('hidden-view');
+            document.getElementById('view-activity').classList.add('visible-view');
+
+            // Ajouter la classe pour forcer l'impression de l'activité
+            document.body.classList.add('printing-activity');
+
+            const btn = document.getElementById('main-action-btn');
+            btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg> Télécharger l'activité (PDF)`;
+            
+            window.scrollTo(0, 0);
+        }
+
+        function showCourse() {
+            document.getElementById('view-activity').classList.add('hidden-view');
+            document.getElementById('view-activity').classList.remove('visible-view');
+
+            document.getElementById('view-course').classList.remove('hidden-view');
+            document.getElementById('view-course').classList.add('visible-view');
+
+            // Retirer la classe d'impression activité
+            document.body.classList.remove('printing-activity');
+
+            const btn = document.getElementById('main-action-btn');
+            btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg> Télécharger le cours (PDF)`;
+
+            window.scrollTo(0, 0);
+        }
+
+        function handlePrint() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
